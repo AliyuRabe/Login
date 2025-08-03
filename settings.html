@@ -1,0 +1,427 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account Settings | Arkad Academy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <style>
+    :root {
+      --primary: #0d6efd;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+    }
+    .settings-card {
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: none;
+    }
+    .nav-pills .nav-link.active {
+      background-color: var(--primary);
+    }
+    .nav-pills .nav-link {
+      color: #495057;
+      font-weight: 500;
+    }
+    .profile-img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--primary);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .profile-img:hover {
+      opacity: 0.8;
+    }
+    .section-title {
+      position: relative;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50px;
+      height: 3px;
+      background-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <!-- Reuse the navbar from dashboard.html -->
+  
+  <div class="container py-4">
+    <div class="row">
+      <div class="col-lg-3">
+        <div class="card settings-card p-3 mb-4">
+          <div class="text-center mb-4">
+            <img id="profileImage" src="https://ui-avatars.com/api/?name=U&background=random" 
+                 alt="Profile" class="profile-img mb-3">
+            <h5 id="usernameDisplay">Username</h5>
+            <small class="text-muted" id="userRoleDisplay">Student</small>
+          </div>
+
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" data-bs-toggle="pill" href="#profile">
+                <i class="bi bi-person me-2"></i> Profile
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="pill" href="#security">
+                <i class="bi bi-shield-lock me-2"></i> Security
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="pill" href="#notifications">
+                <i class="bi bi-bell me-2"></i> Notifications
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="pill" href="#preferences">
+                <i class="bi bi-gear me-2"></i> Preferences
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-lg-9">
+        <div class="card settings-card p-4">
+          <div class="tab-content">
+            <!-- Profile Tab -->
+            <div class="tab-pane fade show active" id="profile">
+              <h4 class="section-title">Profile Information</h4>
+              
+              <form id="profileForm">
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <label class="form-label">First Name</label>
+                    <input type="text" class="form-control" value="John">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-control" value="Doe">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" id="usernameInput" value="john_doe">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="john@example.com" readonly>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" value="2000-01-01">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" placeholder="+1 (123) 456-7890">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Country</label>
+                    <select class="form-select">
+                      <option>United States</option>
+                      <option>Canada</option>
+                      <option>United Kingdom</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">City/Town</label>
+                    <input type="text" class="form-control" value="New York">
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Bio</label>
+                    <textarea class="form-control" rows="3" placeholder="Tell us about yourself..."></textarea>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary px-4">
+                  <i class="bi bi-save me-2"></i> Save Changes
+                </button>
+              </form>
+            </div>
+
+            <!-- Security Tab -->
+            <div class="tab-pane fade" id="security">
+              <h4 class="section-title">Security Settings</h4>
+              
+              <div class="mb-4">
+                <h6>Change Password</h6>
+                <form id="passwordForm">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Current Password</label>
+                      <input type="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">New Password</label>
+                      <input type="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Confirm New Password</label>
+                      <input type="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <div class="col-12">
+                      <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-shield-lock me-2"></i> Update Password
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="mb-4">
+                <h6>Two-Factor Authentication</h6>
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle me-2"></i> Protect your account with an extra layer of security
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="twoFactorToggle">
+                  <label class="form-check-label" for="twoFactorToggle">Enable 2FA</label>
+                </div>
+              </div>
+
+              <div>
+                <h6>Active Sessions</h6>
+                <div class="list-group">
+                  <div class="list-group-item">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <h6 class="mb-1">Chrome on Windows</h6>
+                        <small class="text-muted">New York, USA • Last active: 2 hours ago</small>
+                      </div>
+                      <button class="btn btn-sm btn-outline-danger">Revoke</button>
+                    </div>
+                  </div>
+                  <div class="list-group-item">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <h6 class="mb-1">Safari on iPhone</h6>
+                        <small class="text-muted">San Francisco, USA • Last active: 1 week ago</small>
+                      </div>
+                      <button class="btn btn-sm btn-outline-danger">Revoke</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notifications Tab -->
+            <div class="tab-pane fade" id="notifications">
+              <h4 class="section-title">Notification Preferences</h4>
+              
+              <form id="notificationsForm">
+                <h6 class="mt-4">Email Notifications</h6>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="checkbox" id="emailAnnouncements" checked>
+                  <label class="form-check-label" for="emailAnnouncements">Announcements</label>
+                </div>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="checkbox" id="emailAssignments" checked>
+                  <label class="form-check-label" for="emailAssignments">New Assignments</label>
+                </div>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="checkbox" id="emailGrades">
+                  <label class="form-check-label" for="emailGrades">Grade Updates</label>
+                </div>
+
+                <h6 class="mt-4">Push Notifications</h6>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="checkbox" id="pushAnnouncements" checked>
+                  <label class="form-check-label" for="pushAnnouncements">Announcements</label>
+                </div>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="checkbox" id="pushDeadlines" checked>
+                  <label class="form-check-label" for="pushDeadlines">Upcoming Deadlines</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3 px-4">
+                  <i class="bi bi-save me-2"></i> Save Preferences
+                </button>
+              </form>
+            </div>
+
+            <!-- Preferences Tab -->
+            <div class="tab-pane fade" id="preferences">
+              <h4 class="section-title">Account Preferences</h4>
+              
+              <form id="preferencesForm">
+                <h6 class="mt-4">Display Preferences</h6>
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Theme</label>
+                    <select class="form-select" id="themeSelect">
+                      <option value="light">Light</option>
+                      <option value="dark">Dark</option>
+                      <option value="system">System Default</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Language</label>
+                    <select class="form-select" id="languageSelect">
+                      <option>English</option>
+                      <option>Spanish</option>
+                      <option>French</option>
+                    </select>
+                  </div>
+                </div>
+
+                <h6 class="mt-4">Privacy Settings</h6>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="checkbox" id="profileVisibility" checked>
+                  <label class="form-check-label" for="profileVisibility">Make my profile visible to other students</label>
+                </div>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="checkbox" id="searchVisibility" checked>
+                  <label class="form-check-label" for="searchVisibility">Include me in search results</label>
+                </div>
+
+                <div class="alert alert-danger mt-4">
+                  <h6>Danger Zone</h6>
+                  <p>These actions are irreversible. Proceed with caution.</p>
+                  <button type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#deactivateModal">
+                    <i class="bi bi-x-circle me-1"></i> Deactivate Account
+                  </button>
+                  <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="bi bi-trash me-1"></i> Delete Account
+                  </button>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3 px-4">
+                  <i class="bi bi-save me-2"></i> Save Preferences
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deactivate Account Modal -->
+  <div class="modal fade" id="deactivateModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Deactivate Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to deactivate your account? You can reactivate it by logging in again.</p>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="confirmDeactivate">
+            <label class="form-check-label" for="confirmDeactivate">I understand this action is reversible</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" onclick="deactivateAccount()">Deactivate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Account Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-danger"><strong>Warning:</strong> This will permanently delete your account and all associated data. This action cannot be undone.</p>
+          <div class="mb-3">
+            <label class="form-label">Enter your password to confirm:</label>
+            <input type="password" class="form-control" id="deletePassword" placeholder="••••••••">
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="confirmDelete">
+            <label class="form-check-label" for="confirmDelete">I understand all my data will be permanently deleted</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script>
+    // Initialize user data
+    const user = JSON.parse(localStorage.getItem('arkad_logged_in')) || {};
+    document.getElementById('usernameDisplay').textContent = user.username || 'User';
+    document.getElementById('userRoleDisplay').textContent = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Student';
+    document.getElementById('usernameInput').value = user.username || '';
+    
+    if (user.profileImage) {
+      document.getElementById('profileImage').src = user.profileImage;
+    }
+
+    // Profile image upload
+    document.getElementById('profileImage').addEventListener('click', function() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            document.getElementById('profileImage').src = event.target.result;
+            // In real app: upload to server and update user profile
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+      input.click();
+    });
+
+    // Form submissions
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      Toastify({
+        text: "Profile updated successfully",
+        duration: 3000,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)"
+      }).showToast();
+    });
+
+    // Account actions
+    function deactivateAccount() {
+      if (!document.getElementById('confirmDeactivate').checked) {
+        alert('Please confirm you understand this action');
+        return;
+      }
+      alert('Account deactivated (simulated)');
+      // In real app: make API call to deactivate
+      document.getElementById('deactivateModal').querySelector('.btn-close').click();
+    }
+
+    function deleteAccount() {
+      if (!document.getElementById('confirmDelete').checked || !document.getElementById('deletePassword').value) {
+        alert('Please confirm deletion and enter your password');
+        return;
+      }
+      alert('Account deleted (simulated)');
+      // In real app: make API call to delete
+      document.getElementById('deleteModal').querySelector('.btn-close').click();
+    }
+  </script>
+</body>
+</html>

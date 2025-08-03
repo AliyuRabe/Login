@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login | Arkad Academy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), 
+                        url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: none;
+    }
+    .btn-primary {
+      background-color: #0d6efd;
+      border: none;
+      padding: 10px;
+      font-weight: 500;
+    }
+    .form-control {
+      padding: 12px 15px;
+    }
+    .input-group-text {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-primary navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Arkad Academy</a>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-5">
+        <div class="card p-4">
+          <div class="text-center mb-4">
+            <h3>Welcome Back</h3>
+            <p class="text-muted">Sign in to continue</p>
+          </div>
+
+          <form id="loginForm">
+            <div class="mb-3">
+              <label class="form-label">Email Address</label>
+              <input type="email" id="email" class="form-control" placeholder="john@example.com" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <div class="input-group">
+                <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="text-end mt-2">
+                <a href="forgot-password.html" class="text-decoration-none">Forgot password?</a>
+              </div>
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" id="rememberMe" class="form-check-input">
+              <label class="form-check-label">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+              <span id="submitText">Login</span>
+              <span id="submitSpinner" class="spinner-border spinner-border-sm d-none"></span>
+            </button>
+
+            <div class="text-center">
+              <p class="mb-0">Don't have an account? <a href="signup.html" class="text-decoration-none">Sign up</a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script>
+    // DOM Elements
+    const loginForm = document.getElementById('loginForm');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const submitBtn = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const rememberMe = document.getElementById('rememberMe');
+
+    // Login attempts tracking
+    let loginAttempts = 0;
+    const MAX_ATTEMPTS = 3;
+    const LOCKOUT_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+    // Check for saved credentials
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedEmail = localStorage.getItem('arkad_remember_email');
+      const savedPassword = localStorage.getItem('arkad_remember_password');
+      
+      if (savedEmail && savedPassword) {
+        document.getElementById('email').value = savedEmail;
+        document.getElementById('password').value = savedPassword;
+        rememberMe.checked = true;
+      }
+    });
+
+    // Event Listeners
+    togglePasswordBtn.addEventListener('click', togglePasswordVisibility);
+    loginForm.addEventListener('submit', handleLogin);
+
+    // Functions
+    function togglePasswordVisibility() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePasswordBtn.innerHTML = type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      
+      // Check if user is locked out
+      const lockoutUntil = localStorage.getItem('arkad_lockout_until');
+      if (lockoutUntil && Date.now() < parseInt(lockoutUntil)) {
+        const minutesLeft = Math.ceil((parseInt(lockoutUntil) - Date.now()) / 60000);
+        Toastify({
+          text: `Account locked. Try again in ${minutesLeft} minute(s)`,
+          duration: 5000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)"
+        }).showToast();
+        return;
+      }
+
+      // Show loading state
+      submitBtn.textContent = "Authenticating...";
+      submitSpinner.classList.remove('d-none');
+
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      try {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        // Get users from localStorage
+        const users = JSON.parse(localStorage.getItem('arkad_users')) || [];
+        const matchedUser = users.find(user => 
+          user.email.toLowerCase() === email.toLowerCase() && 
+          user.password === password // In production: use bcrypt.compare()
+        );
+
+        if (!matchedUser) {
+          loginAttempts++;
+          
+          if (loginAttempts >= MAX_ATTEMPTS) {
+            const lockoutTime = Date.now() + LOCKOUT_TIME;
+            localStorage.setItem('arkad_lockout_until', lockoutTime.toString());
+            
+            Toastify({
+              text: `Too many attempts. Account locked for 5 minutes.`,
+              duration: 5000,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)"
+            }).showToast();
+          } else {
+            throw new Error(`Invalid credentials. ${MAX_ATTEMPTS - loginAttempts} attempts remaining`);
+          }
+          return;
+        }
+
+        // Reset attempts on successful login
+        loginAttempts = 0;
+        localStorage.removeItem('arkad_lockout_until');
+
+        // Remember credentials if checked
+        if (rememberMe.checked) {
+          localStorage.setItem('arkad_remember_email', email);
+          localStorage.setItem('arkad_remember_password', password);
+        } else {
+          localStorage.removeItem('arkad_remember_email');
+          localStorage.removeItem('arkad_remember_password');
+        }
+
+        // Save logged in user
+        localStorage.setItem('arkad_logged_in', JSON.stringify(matchedUser));
+
+        // Show success
+        Toastify({
+          text: `Welcome back, ${matchedUser.username}!`,
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)"
+        }).showToast();
+
+        // Redirect based on role
+        setTimeout(() => {
+          window.location.href = matchedUser.role === 'admin' ? 'admin.html' : 'dashboard.html';
+        }, 1500);
+
+      } catch (error) {
+        Toastify({
+          text: error.message,
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)"
+        }).showToast();
+      } finally {
+        submitBtn.textContent = "Login";
+        submitSpinner.classList.add('d-none');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign Up | Arkad Academy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <style>
+    :root {
+      --primary: #0d6efd;
+      --danger: #dc3545;
+      --success: #198754;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+    }
+    .card {
+      margin-top: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .password-strength .progress {
+      height: 5px;
+      background-color: #e9ecef;
+    }
+    #profilePreview {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--primary);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    #profilePreview:hover {
+      opacity: 0.8;
+    }
+    .form-check-label a {
+      text-decoration: none;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-primary navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Arkad Academy</a>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card p-4">
+          <div class="text-center mb-4">
+            <h3>Create Your Account</h3>
+            <p class="text-muted">Join our learning community</p>
+          </div>
+          
+          <form id="signupForm">
+            <div class="mb-3 text-center">
+              <img id="profilePreview" src="https://ui-avatars.com/api/?name=New+User&background=random" 
+                   alt="Profile" class="mb-2">
+              <input type="file" id="profileImage" accept="image/*" class="d-none">
+              <button type="button" class="btn btn-sm btn-outline-primary" onclick="document.getElementById('profileImage').click()">
+                <i class="bi bi-camera"></i> Upload Photo
+              </button>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Username</label>
+                  <input type="text" id="username" class="form-control" placeholder="john_doe" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input type="email" id="email" class="form-control" placeholder="john@example.com" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <div class="input-group">
+                <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="password-strength mt-2">
+                <div class="progress">
+                  <div id="passwordStrength" class="progress-bar" role="progressbar"></div>
+                </div>
+                <small id="passwordTips" class="text-muted">Use 8+ characters with numbers and symbols</small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Confirm Password</label>
+              <input type="password" id="confirmPassword" class="form-control" placeholder="••••••••" required>
+              <div id="passwordMatch" class="invalid-feedback">Passwords do not match</div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Date of Birth</label>
+                  <input type="date" id="dob" class="form-control" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Role</label>
+                  <select id="role" class="form-select" required>
+                    <option value="">Select Role</option>
+                    <option value="student">Student</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Town/City</label>
+                  <input type="text" id="town" class="form-control" placeholder="New York" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Country</label>
+                  <input type="text" id="country" class="form-control" placeholder="United States" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3" id="adminCodeDiv" style="display:none;">
+              <label class="form-label">Admin Access Code</label>
+              <input type="password" id="adminAccessCode" class="form-control" placeholder="Enter secret code">
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" id="termsCheck" class="form-check-input" required>
+              <label class="form-check-label">I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms & Conditions</a></label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2">
+              <span id="submitText">Create Account</span>
+              <span id="submitSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+            </button>
+
+            <p class="text-center mt-3">
+              Already have an account? <a href="login.html">Log in</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terms Modal -->
+  <div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Terms & Conditions</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Terms content here -->
+          <h6>1. Account Responsibilities</h6>
+          <p>You are responsible for maintaining the confidentiality of your account credentials...</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script>
+    // DOM Elements
+    const signupForm = document.getElementById('signupForm');
+    const profileImageInput = document.getElementById('profileImage');
+    const profilePreview = document.getElementById('profilePreview');
+    const roleSelect = document.getElementById('role');
+    const adminCodeDiv = document.getElementById('adminCodeDiv');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const passwordMatchFeedback = document.getElementById('passwordMatch');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const submitBtn = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+
+    // Constants
+    const ADMIN_SECRET_CODE = "ArkadAdmin2025";
+    const MIN_PASSWORD_LENGTH = 8;
+
+    // Event Listeners
+    profileImageInput.addEventListener('change', updateProfilePreview);
+    roleSelect.addEventListener('change', toggleAdminCodeField);
+    passwordInput.addEventListener('input', checkPasswordStrength);
+    confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+    togglePasswordBtn.addEventListener('click', togglePasswordVisibility);
+    signupForm.addEventListener('submit', handleSignup);
+
+    // Functions
+    function updateProfilePreview() {
+      const file = profileImageInput.files[0];
+      if (file) {
+        if (file.size > 2 * 1024 * 1024) {
+          Toastify({
+            text: "Image must be less than 2MB",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)"
+          }).showToast();
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => profilePreview.src = e.target.result;
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function toggleAdminCodeField() {
+      const isAdmin = roleSelect.value === 'admin';
+      adminCodeDiv.style.display = isAdmin ? 'block' : 'none';
+      if (isAdmin) {
+        document.getElementById('adminAccessCode').required = true;
+      } else {
+        document.getElementById('adminAccessCode').required = false;
+      }
+    }
+
+    function checkPasswordStrength() {
+      const password = passwordInput.value;
+      let strength = 0;
+      
+      // Length check
+      if (password.length >= MIN_PASSWORD_LENGTH) strength += 25;
+      
+      // Contains numbers
+      if (/\d/.test(password)) strength += 25;
+      
+      // Contains special chars
+      if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength += 25;
+      
+      // Contains uppercase
+      if (/[A-Z]/.test(password)) strength += 25;
+
+      const strengthBar = document.getElementById('passwordStrength');
+      strengthBar.style.width = `${strength}%`;
+      
+      if (strength < 50) {
+        strengthBar.className = "progress-bar bg-danger";
+      } else if (strength < 80) {
+        strengthBar.className = "progress-bar bg-warning";
+      } else {
+        strengthBar.className = "progress-bar bg-success";
+      }
+    }
+
+    function validatePasswordMatch() {
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+      
+      if (confirmPassword && password !== confirmPassword) {
+        confirmPasswordInput.classList.add('is-invalid');
+        passwordMatchFeedback.style.display = 'block';
+      } else {
+        confirmPasswordInput.classList.remove('is-invalid');
+        passwordMatchFeedback.style.display = 'none';
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      confirmPasswordInput.setAttribute('type', type);
+      togglePasswordBtn.innerHTML = type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+    }
+
+    async function handleSignup(e) {
+      e.preventDefault();
+      
+      // Validate form
+      if (!signupForm.checkValidity()) {
+        signupForm.classList.add('was-validated');
+        return;
+      }
+
+      // Check password match
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        Toastify({
+          text: "Passwords do not match",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)"
+        }).showToast();
+        return;
+      }
+
+      // Check admin code if admin
+      if (roleSelect.value === 'admin') {
+        const adminCode = document.getElementById('adminAccessCode').value;
+        if (adminCode !== ADMIN_SECRET_CODE) {
+          Toastify({
+            text: "Invalid admin access code",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)"
+          }).showToast();
+          return;
+        }
+      }
+
+      // Show loading state
+      submitBtn.textContent = "Creating account...";
+      submitSpinner.classList.remove('d-none');
+
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      try {
+        // Create user object
+        const user = {
+          id: generateUserId(roleSelect.value),
+          username: document.getElementById('username').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value, // In production: hash this!
+          dob: document.getElementById('dob').value,
+          town: document.getElementById('town').value.trim(),
+          country: document.getElementById('country').value.trim(),
+          role: roleSelect.value,
+          profileImage: await getProfileImageBase64(),
+          createdAt: new Date().toISOString()
+        };
+
+        // Save to localStorage
+        let users = JSON.parse(localStorage.getItem('arkad_users')) || [];
+        
+        // Check if email exists
+        if (users.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
+          throw new Error('Email already registered');
+        }
+
+        users.push(user);
+        localStorage.setItem('arkad_users', JSON.stringify(users));
+
+        // Show success
+        Toastify({
+          text: `Account created! Your ID: ${user.id}`,
+          duration: 5000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)"
+        }).showToast();
+
+        // Redirect after delay
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 2000);
+
+      } catch (error) {
+        Toastify({
+          text: error.message || "Signup failed",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)"
+        }).showToast();
+      } finally {
+        submitBtn.textContent = "Create Account";
+        submitSpinner.classList.add('d-none');
+      }
+    }
+
+    function getProfileImageBase64() {
+      return new Promise((resolve) => {
+        const file = profileImageInput.files[0];
+        if (!file) {
+          resolve(null);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function generateUserId(role) {
+      const prefix = role === 'admin' ? 'ADM' : 'STD';
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      return `${prefix}-${randomNum}`;
+    }
+  </script>
+</body>
+</html>
